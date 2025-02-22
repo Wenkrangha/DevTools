@@ -29,20 +29,22 @@ public class Command implements CommandExecutor {
         if (strings[0].equalsIgnoreCase("setname")) {
             ItemStack itemStack = DevTools.itemStack;
             ItemMeta itemMeta = itemStack.getItemMeta();
-            String replace = strings[1].replace("#", "§").replace("none", "");
+            String replace = strings[1].replace("#", "§").replace("none", " ");
+
             player.sendMessage(replace);
             itemMeta.setDisplayName(replace);
             itemStack.setItemMeta(itemMeta);
+            if (strings[1].equalsIgnoreCase("none")) itemMeta.setItemName("");
             DevTools.itemStack = itemStack;
         }
         if (strings[0].equalsIgnoreCase("setlore")) {
             ItemStack itemStack = DevTools.itemStack;
             ItemMeta itemMeta = itemStack.getItemMeta();
             ArrayList<String> arrayList = new ArrayList<>();
-            String string = strings[1].replace("#", "§").replace("none", " ");
+            String string = strings[1].replace("#", "§").replace("none", " ").replace("^", "\n");
             String[] split = string.split("\\^");
-            arrayList = (ArrayList<String>) Arrays.stream(split).toList();
-            itemMeta.setLore(arrayList);
+            itemMeta.setLore(List.of(split));
+            player.sendMessage(List.of(split).toString());
             itemStack.setItemMeta(itemMeta);
         }
         if (strings[0].equalsIgnoreCase("builditem")){
