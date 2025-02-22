@@ -11,7 +11,7 @@ public final class DevTools extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-
+        this.getCommand("dv").setExecutor(new Command());
     }
 
     @Override

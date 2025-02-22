@@ -2,3 +2,7 @@ name: DevTools
 version: '1.0-SNAPSHOT'
 main: com.wenkrang.devTools.DevTools
 api-version: '1.21'
+commands:
+  dv:
+    description: DevTools
+    usage: /dv

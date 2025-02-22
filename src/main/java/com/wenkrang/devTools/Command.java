@@ -33,12 +33,13 @@ public class Command implements CommandExecutor {
             player.sendMessage(replace);
             itemMeta.setDisplayName(replace);
             itemStack.setItemMeta(itemMeta);
+            DevTools.itemStack = itemStack;
         }
         if (strings[0].equalsIgnoreCase("setlore")) {
             ItemStack itemStack = DevTools.itemStack;
             ItemMeta itemMeta = itemStack.getItemMeta();
             ArrayList<String> arrayList = new ArrayList<>();
-            String string = strings[1].replace("#", "§").replace("none", "");
+            String string = strings[1].replace("#", "§").replace("none", " ");
             String[] split = string.split("\\^");
             arrayList = (ArrayList<String>) Arrays.stream(split).toList();
             itemMeta.setLore(arrayList);
