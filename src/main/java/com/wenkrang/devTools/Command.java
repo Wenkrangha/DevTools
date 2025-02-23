@@ -41,10 +41,12 @@ public class Command implements CommandExecutor {
             ItemStack itemStack = DevTools.itemStack;
             ItemMeta itemMeta = itemStack.getItemMeta();
             ArrayList<String> arrayList = new ArrayList<>();
-            String string = strings[1].replace("#", "§").replace("none", " ").replace("^", "\n");
+            String string = strings[1].replace("#", "§").replace("none", " ");
             String[] split = string.split("\\^");
             itemMeta.setLore(List.of(split));
-            player.sendMessage(List.of(split).toString());
+            for (String string1 : split) {
+                player.sendMessage(string1);
+            }
             itemStack.setItemMeta(itemMeta);
         }
         if (strings[0].equalsIgnoreCase("builditem")){
@@ -52,12 +54,16 @@ public class Command implements CommandExecutor {
             build = build + "ItemStack itemStack = new ItemStack(Material." + DevTools.itemStack.getType().toString() + ");\n";
             build = build + "ItemMeta itemMeta = itemStack.getItemMeta();\n";
             build = build + "itemMeta.setDisplayName(" + DevTools.itemStack.getItemMeta().getDisplayName() + ");\n";
-            build = build + "ArrayList<String> lore = new ArrayList<>();\n";
             List<String> lore = DevTools.itemStack.getItemMeta().getLore();
-            for (String string : lore) {
-                build = build + "lore.add(" + string + ");\n";
+            if (lore != null) {
+                build = build + "ArrayList<String> lore = new ArrayList<>();\n";
+
+                for (String string : lore) {
+                    build = build + "lore.add(" + string + ");\n";
+                }
+                build = build + "itemMeta.setLore(lore);\n";
             }
-            build = build + "itemMeta.setLore(lore);\n";
+
             build = build + "itemStack.setItemMeta(itemMeta);";
             try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("./item.txt"))) {
                 bufferedWriter.write(build);
@@ -129,12 +135,15 @@ public class Command implements CommandExecutor {
                     build = build + "ItemStack itemStack"+ Integer.valueOf(i) +" = new ItemStack(Material." + itemStacks.get(i).getType().toString() + ");\n";
                     build = build + "ItemMeta itemMeta"+ Integer.valueOf(i) +" = itemStack"+ Integer.valueOf(i) +".getItemMeta();\n";
                     build = build + "itemMeta"+ Integer.valueOf(i) +".setDisplayName(" + itemStacks.get(i).getItemMeta().getDisplayName() + ");\n";
-                    build = build + "ArrayList<String> lore"+ Integer.valueOf(i) +" = new ArrayList<>();\n";
                     List<String> lore = itemStacks.get(i).getItemMeta().getLore();
-                    for (String string : lore) {
-                        build = build + "lore"+ Integer.valueOf(i) +".add(" + string + ");\n";
+                    if (lore != null) {
+                        build = build + "ArrayList<String> lore"+ Integer.valueOf(i) +" = new ArrayList<>();\n";
+
+                        for (String string : lore) {
+                            build = build + "lore"+ Integer.valueOf(i) +".add(" + string + ");\n";
+                        }
+                        build = build + "itemMeta"+ Integer.valueOf(i) +".setLore(lore"+ Integer.valueOf(i) +");\n";
                     }
-                    build = build + "itemMeta"+ Integer.valueOf(i) +".setLore(lore"+ Integer.valueOf(i) +");\n";
                     build = build + "itemStack"+ Integer.valueOf(i) +".setItemMeta(itemMeta"+ Integer.valueOf(i) +");\n";
                     bufferedWriter.write(build);
                 }
