@@ -129,36 +129,38 @@ public class Command implements CommandExecutor {
                         itemStacks.add(DevTools.inventory.getItem(i));
                     }
                 }
+                commandSender.sendMessage(itemStacks.toString());
                 try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("./inv.txt"))) {
                     bufferedWriter.write("Inventory inventory = Bukkit.createInventory(null, "+Integer.valueOf(DevTools.inventory.getSize())+", \""+ strings[1] +"\");\n");
                     String build = "";
                     for (int i = 0;i < itemStacks.size();i++) {
-                        build = build + "ItemStack itemStack"+ Integer.valueOf(i) +" = new ItemStack(Material." + itemStacks.get(i).getType().toString() + ");\n";
-                        build = build + "ItemMeta itemMeta"+ Integer.valueOf(i) +" = itemStack"+ Integer.valueOf(i) +".getItemMeta();\n";
-                        build = build + "itemMeta"+ Integer.valueOf(i) +".setDisplayName(" + itemStacks.get(i).getItemMeta().getDisplayName() + ");\n";
-                        List<String> lore = itemStacks.get(i).getItemMeta().getLore();
-                        if (lore != null) {
-                            build = build + "ArrayList<String> lore"+ Integer.valueOf(i) +" = new ArrayList<>();\n";
+                        player.sendMessage(String.valueOf(i));
+                        try {
+                            build = build + "ItemStack itemStack"+ Integer.valueOf(i) +" = new ItemStack(Material." + itemStacks.get(i).getType() + ");\n";
+                            build = build + "ItemMeta itemMeta"+ Integer.valueOf(i) +" = itemStack"+ Integer.valueOf(i) +".getItemMeta();\n";
+                            build = build + "itemMeta"+ Integer.valueOf(i) +".setDisplayName(\"" + itemStacks.get(i).getItemMeta().getDisplayName() + "\");\n";
+                            List<String> lore = itemStacks.get(i).getItemMeta().getLore();
+                            if (lore != null) {
+                                build = build + "ArrayList<String> lore"+ Integer.valueOf(i) +" = new ArrayList<>();\n";
 
-                            for (String string : lore) {
-                                build = build + "lore"+ Integer.valueOf(i) +".add(\"" + string + "\");\n";
+                                for (String string : lore) {
+                                    build = build + "lore"+ Integer.valueOf(i) +".add(\"" + string + "\");\n";
+                                }
+                                build = build + "itemMeta"+ Integer.valueOf(i) +".setLore(lore"+ Integer.valueOf(i) +");\n";
                             }
-                            build = build + "itemMeta"+ Integer.valueOf(i) +".setLore(lore"+ Integer.valueOf(i) +");\n";
+                            build = build + "itemStack"+ Integer.valueOf(i) +".setItemMeta(itemMeta"+ Integer.valueOf(i) +");\n";
+                        } catch (Exception e) {
+                            player.sendMessage(String.valueOf(i));
                         }
-                        build = build + "itemStack"+ Integer.valueOf(i) +".setItemMeta(itemMeta"+ Integer.valueOf(i) +");\n";
-                        bufferedWriter.write(build);
                     }
+                    bufferedWriter.write(build);
                     for (int i = 0;i < DevTools.inventory.getSize();i++) {
                         if (DevTools.inventory.getItem(i) != null) {
-                            bufferedWriter.write("inventory.setItem("+Integer.valueOf(i)+", itemStack"+Integer.valueOf(itemStacks.indexOf(DevTools.inventory.getItem(i)))+");");
-                        }else{
-                            bufferedWriter.write("inventory.setItem("+Integer.valueOf(i)+", null");
+                            bufferedWriter.write("inventory.setItem("+Integer.valueOf(i)+", itemStack"+Integer.valueOf(itemStacks.indexOf(DevTools.inventory.getItem(i)))+");\n");
                         }
-                        bufferedWriter.close();
                     }
-
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         }catch (Exception e) {
